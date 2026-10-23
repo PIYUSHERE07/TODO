@@ -1,8 +1,7 @@
 const express = require('express')
 const userRouter = express.Router()
+const todoController = require('../controllers/todoController')
 
-userRouter.get("/",(req,res,next)=>{
-  res.render("home")
-})
+userRouter.get("/",todoController.getHome)
 
 module.exports = userRouter;
