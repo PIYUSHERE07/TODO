@@ -12,10 +12,10 @@ const MONGO_URL = "mongodb+srv://todo:piyushere@firstcluster.lyzbkhu.mongodb.net
 app.set('view engine','ejs')
 app.set('views','views')
 app.use(express.static(path.join(rootDir,'public')));
-app.use(express.urlencoded())
+app.use(express.urlencoded({extended:true}))
 
 const store = new MongoDBStore({
-  Uri : MONGO_URL,
+  uri :MONGO_URL,
   collection : 'sessions'
 })
 
@@ -23,7 +23,7 @@ app.use(session({
   secret : "piyushmalewar",
   resave:false,
   saveUninitialized:true,
-  Store:store,
+  store:store,
 }))
 
 app.use(userRouter)

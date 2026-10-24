@@ -1,7 +1,9 @@
 const User = require('../models/user')
 const {check,validationResult} = require('express-validator')
+const bcrypt = require('bcryptjs')
 
 exports.getSignup = (req,res,next)=>{
+  req.session.isLoggedIn = false;
   res.render('signup')
 }
 
@@ -73,32 +75,49 @@ exports.postSignup = [
       });
     }
     else{
-      const user = new User({firstname,lastname,username,password});
-      user.save()
-      .then(()=>{
-        res.redirect('/login')
-      })
-      .catch((err)=>{
-        console.log("error in saving data : "+err)
-        render('signup',{
-        isLoggedIn: false,
-        errorMessage: errors.array().map((error)=>error.msg),
-        oldInput:{
-          firstname,
-          lastname,
-          username,
-          password
-        }
-      });
+      bcrypt.hash(password,12)
+      .then(hashPassword=>{
+        const user = new User({firstname,lastname,username,password:hashPassword});
+        user.save()
+        .then(()=>{
+          res.redirect('/login')
+        })
+        .catch((err)=>{
+          console.log("error in saving data : "+err)
+          res.render('signup',{
+          isLoggedIn: false,
+          errorMessage: errors.array().map((error)=>error.msg),
+          oldInput:{
+            firstname,
+            lastname,
+            username,
+            password
+          }
+        });
+        })
       })
     }
   }
 ]
   
 exports.getLogin = (req,res,next)=>{
-  
   res.render('login')
 }
-exports.postLogin = (req,res,next)=>{
-  res.send("login post")
+exports.postLogin = async (req,res,next)=>{
+  const {username,password} = req.body;
+  const userdata = await User.find();
+  const user = await userdata.find(user => user.username == username)
+  
+  if(!user){
+    res.status(401).redirect('/login');
+  }
+  else{
+    const isMatch = await bcrypt.compare(password,user.password);
+
+    if(isMatch){
+      req.session.isLoggedIn = true;
+      res.redirect("/")
+    }
+    else res.redirect('/login')
+  }
 }

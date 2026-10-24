@@ -1,3 +1,5 @@
 exports.getHome = (req,res,next)=>{
-  res.render("home")
+  res.render("home",{
+    isLoggedIn : req.session.isLoggedIn
+  })
 }
