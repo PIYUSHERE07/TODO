@@ -22,8 +22,10 @@
   "homepage": "https://github.com/PIYUSHERE07/TODO#readme",
   "dependencies": {
     "@tailwindcss/cli": "^4.3.3",
+    "connect-mongodb-session": "^5.0.0",
     "ejs": "^7.0.2",
     "express": "^5.3.0",
+    "express-session": "^1.19.0",
     "express-validator": "^7.3.2",
     "mongodb": "^7.7.0",
     "mongoose": "^9.11.3",

@@ -8,7 +8,7 @@
 <body>
   <div class="main">
     <div class="box">
-      <form action="/" method="post">
+      <form action="/signup" method="post">
         <div class="name">
           <div class="firstname">
             <label for="firstname">Firstname</label>
@@ -27,7 +27,7 @@
           <label for="password">Password</label>
           <input type="password" name="password" id="password">
         </div>
-        <div class="password">
+        <div class="conformpass">
           <label for="conformPass">Conform password</label>
           <input type="password" name="conformPass" id="conformPass">
         </div>
@@ -35,6 +35,9 @@
           <button type="submit">Sign Up</button>
         </div>
       </form>
+      <div class="sendToOpp">
+        I already have an account! <a href="/login">Log-in</a>
+      </div>
     </div>
   </div>
 </body>

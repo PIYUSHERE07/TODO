@@ -6,15 +6,15 @@ const todoSchema = mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref:'User',
     required:true,
-    unique:ture
+    unique:true
   },
   todoList:[{
     task:{
-      type:stirng,
+      type:String,
       required: true
     },
     date:{
-      type:date,
+      type:Date,
       required: true
     }
   }
@@ -23,4 +23,4 @@ const todoSchema = mongoose.Schema({
 {timestamp:true}
 )
 
-module.exports = mongoose.exports('Todo',todoSchema);
+module.exports = mongoose.model("Todo",todoSchema);
