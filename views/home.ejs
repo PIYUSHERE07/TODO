@@ -16,7 +16,7 @@
         <form action="/" method="POST">
           <div class="left">
             <label for="todoTopic">Enter Task</label>
-            <input type="text" name="todoTopic" id="todoTopic" required>
+            <input type="text" name="todoTopic" id="todoTopic" >
           </div>
           <div class="middle">
             <label for="todoDate">Date</label>
@@ -26,6 +26,15 @@
             <button type="submit">Add Todo</button>
           </div>
         </form>
+        <%if(errorMessage){%>
+          <div class="errors">
+            <ul>
+            <%errorMessage.forEach(err=>{%>
+              <li><%=err%></li>
+            <%})%>
+            </ul>
+          </div>
+      <%}%>
       </div>
     </div>
     <% if(todoList){ %>

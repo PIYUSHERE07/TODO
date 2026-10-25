@@ -4,7 +4,10 @@ const bcrypt = require('bcryptjs')
 
 exports.getSignup = (req,res,next)=>{
   req.session.isLoggedIn = false;
-  res.render('signup')
+  res.render('signup',{
+        isLoggedIn: false,
+        errorMessage: []
+      });
 }
 
 exports.postSignup = [
@@ -80,7 +83,11 @@ exports.postSignup = [
         const user = new User({firstname,lastname,username,password:hashPassword});
         user.save()
         .then(()=>{
-          res.redirect('/login')
+          res.render('/login',
+            {
+              errorMessage:[]
+            }
+          )
         })
         .catch((err)=>{
           console.log("error in saving data : "+err)
@@ -103,15 +110,20 @@ exports.postSignup = [
 exports.getLogin = (req,res,next)=>{
   req.session.isLoggedIn = false;
   req.session.userId = null;
-  res.render('login')
+  res.render('login',
+    {
+      errorMessage:[]
+    }
+  )
 }
 exports.postLogin = async (req,res,next)=>{
   const {username,password} = req.body;
   const userdata = await User.find();
   const user = await userdata.find(user => user.username == username)
-  
   if(!user){
-    res.status(401).redirect('/login');
+    res.status(400).render('login',{
+      errorMessage:["User Not Found"]
+    });
   }
   else{
     const isMatch = await bcrypt.compare(password,user.password);
@@ -124,7 +136,9 @@ exports.postLogin = async (req,res,next)=>{
         else res.redirect("/")
       })
     }
-    else res.redirect('/login')
+    else res.render('login',{
+      errorMessage:["Username and Password not found"]
+    })
   }
 }
 
