@@ -8,29 +8,42 @@
 </head>
 <body>
   <% if(isLoggedIn){ %>
+  <a href="/logout">Log-out</a>
+  <a href="/deleteAcc">Delete Account</a>
   <div class="main">
     <div class="box">
       <div class="todo-form">
-        <form action="/todo-added" method="POST">
+        <form action="/" method="POST">
           <div class="left">
             <label for="todoTopic">Enter Task</label>
-            <input type="text" name="todoTopic" id="todoTopic">
+            <input type="text" name="todoTopic" id="todoTopic" required>
           </div>
           <div class="middle">
             <label for="todoDate">Date</label>
-            <input type="date" name="todoDate" id="todoDate">
+            <input type="date" name="todoDate" id="todoDate" required>
           </div>
           <div class="right">
             <button type="submit">Add Todo</button>
           </div>
         </form>
       </div>
-      <div class="todo-list">
-
-      </div>
     </div>
+    <% if(todoList){ %>
+      <% todoList.forEach(todo=>{ %>
+      <div class="todo">
+        <div class="todo-task"><%=todo.task%></div>
+        <div class="todo-date"><%=todo.date%></div>
+        <div class="todo-delete">
+          <form action="/delete" method="post">
+            <button type="submit">Delete</button>
+            <input type="hidden" name="todoId" value="<%=todo._id%>">
+          </form>
+        </div>
+      </div>
+      <% }) %>
+    <%}%>
   </div>
-  <%}else{%>
+  <% } else{ %>
       <div class="login-box">
       <form action="/login" method="post">
         <div class="username">

@@ -17,7 +17,14 @@ const userSchema = mongoose.Schema({
   password:{
     type:String,
     require:true
-  }
+  },
+  todoList:[{
+    todoId:{
+      type : String,
+      required:true,
+      ref:'Todo'
+    }
+  }]
 })
 
 module.exports = mongoose.model('User',userSchema);

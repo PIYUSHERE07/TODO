@@ -1,14 +1,7 @@
 const mongoose = require('mongoose')
-const mongodb = require('mongodb')
+const User = require('./user')
 
 const todoSchema = mongoose.Schema({
-  userId:{
-    type: mongoose.Schema.Types.ObjectId,
-    ref:'User',
-    required:true,
-    unique:true
-  },
-  todoList:[{
     task:{
       type:String,
       required: true
@@ -17,10 +10,21 @@ const todoSchema = mongoose.Schema({
       type:Date,
       required: true
     }
-  }
-  ]
 },
 {timestamp:true}
 )
+
+
+todoSchema.pre('findOneAndDelete',async function(next){
+  const todoId  = this.getQuery()["_id"]
+  await User.updateMany(
+    {'todoList.todoId':todoId.toString()},
+    {
+      $pull:{
+        todoList:{todoId : todoId.toString()}
+      }
+    }
+  )
+})
 
 module.exports = mongoose.model("Todo",todoSchema);

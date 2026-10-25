@@ -62,7 +62,7 @@ exports.postSignup = [
     if(!errors.isEmpty()){
       console.log("user not saved")
       console.log(errors.array().map((error)=>error.msg))
-      return res.status(422)
+      return res.status(400)
       .render('signup',{
         isLoggedIn: false,
         errorMessage: errors.array().map((error)=>error.msg),
@@ -101,6 +101,8 @@ exports.postSignup = [
 ]
   
 exports.getLogin = (req,res,next)=>{
+  req.session.isLoggedIn = false;
+  req.session.userId = null;
   res.render('login')
 }
 exports.postLogin = async (req,res,next)=>{
@@ -116,8 +118,26 @@ exports.postLogin = async (req,res,next)=>{
 
     if(isMatch){
       req.session.isLoggedIn = true;
-      res.redirect("/")
+      req.session.userId = user._id.toString();
+      return req.session.save((err)=>{
+        if(err) console.log(err);
+        else res.redirect("/")
+      })
     }
     else res.redirect('/login')
   }
+}
+
+exports.getLogout = async (req,res,next)=>{
+  req.session.isLoggedIn = false;
+  req.session.userId=null;
+  res.redirect('/')
+}
+
+exports.getDeleteAcc = async (req,res,next)=>{
+  const userId = req.session.userId;
+  await User.findByIdAndDelete(userId);
+  req.session.isLoggedIn = false;
+  req.session.userId=null;
+  res.redirect('/')
 }
